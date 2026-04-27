@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News Meeting Attendance — Bauer Media Audio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #4700A3;
+    --purple-dark: #35007a;
+    --purple-light: #6b2fcf;
+    --teal: #1FD1BD;
+    --teal-dark: #14a898;
+    --teal-light: #5de2d3;
+    --bg: #f5f4f9;
+    --surface: #ffffff;
+    --surface2: #f0edf8;
+    --text: #1a1030;
+    --text-muted: #7260a8;
+    --border: #e2dcf2;
+    --shadow: 0 2px 12px rgba(71,0,163,0.08);
+    --shadow-lg: 0 8px 32px rgba(71,0,163,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--purple);
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 16px rgba(71,0,163,0.25);
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-logo {
+    width: 32px;
+    height: 32px;
+  }
+  .header-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+  }
+  .header-badge {
+    background: var(--teal);
+    color: var(--purple-dark);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  /* TABS */
+  .tab-bar {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    padding: 14px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.18s;
+    user-select: none;
+    margin-bottom: -2px;
+  }
+  .tab:hover { color: var(--purple); }
+  .tab.active {
+    color: var(--purple);
+    border-bottom-color: var(--purple);
+    font-weight: 600;
+  }
+
+  /* MAIN CONTENT */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 40px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  /* KPI CARDS */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--teal));
+  }
+  .kpi-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.2px;
+  }
+  .kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--purple);
+    line-height: 1;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: -1px;
+  }
+  .kpi-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .kpi-teal .kpi-value { color: var(--teal-dark); }
+
+  /* UPLOAD AREA */
+  .upload-zone {
+    background: var(--surface2);
+    border: 2px dashed var(--purple-light);
+    border-radius: 14px;
+    padding: 36px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 28px;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    background: #ede8f8;
+    border-color: var(--purple);
+  }
+  .upload-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  .upload-zone h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--purple);
+    margin-bottom: 6px;
+  }
+  .upload-zone p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .upload-zone input { display: none; }
+  .btn-upload {
+    display: inline-block;
+    margin-top: 14px;
+    background: var(--purple);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s;
+    border: none;
+  }
+  .btn-upload:hover { background: var(--purple-dark); }
+
+  /* MEETING SELECTOR */
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .select-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+    max-width: 480px;
+  }
+  .select-wrap select {
+    width: 100%;
+    padding: 10px 38px 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    appearance: none;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: border-color 0.18s;
+  }
+  .select-wrap select:focus {
+    outline: none;
+    border-color: var(--purple);
+  }
+  .select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    font-size: 13px;
+  }
+  .btn {
+    padding: 10px 20px;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+  }
+  .btn-primary { background: var(--purple); color: #fff; }
+  .btn-primary:hover { background: var(--purple-dark); }
+  .btn-secondary { background: var(--surface); color: var(--purple); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--purple); }
+  .btn-teal { background: var(--teal); color: var(--purple-dark); }
+  .btn-teal:hover { background: var(--teal-dark); }
+
+  /* GRID LAYOUTS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .card-body { padding: 20px 22px; }
+
+  /* ATTENDANCE TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .data-table th:hover { color: var(--purple); }
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0edf8;
+    color: var(--text);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: #f8f6fd; }
+  .sort-arrow { margin-left: 4px; opacity: 0.5; }
+  .sort-active .sort-arrow { opacity: 1; color: var(--purple); }
+
+  /* ATTENDANCE PILL */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .pill-green { background: #e6faf8; color: #0d8c7f; }
+  .pill-orange { background: #fff4e6; color: #b35a00; }
+  .pill-red { background: #fde8e8; color: #b30000; }
+  .pill-purple { background: #ede8f8; color: var(--purple); }
+
+  /* BAR CHART */
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .bar-label {
+    width: 140px;
+    font-size: 12px;
+    color: var(--text);
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+  }
+  .bar-track {
+    flex: 1;
+    height: 22px;
+    background: var(--surface2);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--purple), var(--teal));
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .bar-val {
+    width: 40px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  /* ATTENDANCE HEATMAP */
+  .heatmap-grid {
+    display: grid;
+    gap: 4px;
+  }
+  .hm-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hm-name {
+    width: 160px;
+    font-size: 12px;
+    text-align: right;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+  }
+  .hm-cells { display: flex; gap: 4px; }
+  .hm-cell {
+    width: 36px;
+    height: 28px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s;
+    position: relative;
+  }
+  .hm-cell:hover { transform: scale(1.12); z-index: 10; }
+  .hm-cell-present { background: #1FD1BD22; color: #0d8c7f; border: 1.5px solid #1FD1BD55; }
+  .hm-cell-absent { background: #f0edf8; color: #c5b8e0; border: 1.5px solid #e2dcf2; }
+  .hm-cell-late { background: #fff4e6; color: #b35a00; border: 1.5px solid #ffd080; }
+  .hm-header { display: flex; gap: 4px; margin-bottom: 2px; padding-left: 166px; }
+  .hm-col-label { width: 36px; text-align: center; font-size: 10px; color: var(--text-muted); font-weight: 600; }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding: 10px 0;
+  }
+  .timeline-bar {
+    height: 28px;
+    background: var(--surface2);
+    border-radius: 6px;
+    position: relative;
+    margin-bottom: 6px;
+    overflow: visible;
+  }
+  .timeline-segment {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--purple), var(--teal));
+    opacity: 0.82;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .timeline-segment:hover { opacity: 1; }
+  .timeline-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 140px;
+    display: inline-block;
+  }
+  .timeline-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .timeline-track { flex: 1; height: 20px; background: var(--surface2); border-radius: 4px; position: relative; }
+
+  /* SEARCH */
+  .search-box {
+    padding: 9px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    width: 220px;
+    box-shadow: var(--shadow);
+    transition: border-color 0.18s;
+  }
+  .search-box:focus { outline: none; border-color: var(--purple); }
+
+  /* LEGEND */
+  .legend { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 14px; }
+  .empty-state h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .empty-state p { font-size: 13px; }
+
+  /* TOOLTIP */
+  .tooltip {
+    position: fixed;
+    background: var(--purple-dark);
+    color: #fff;
+    padding: 7px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.15s;
+    max-width: 220px;
+    line-height: 1.5;
+  }
+  .tooltip.visible { opacity: 1; }
+
+  /* DURATION BAR */
+  .dur-bar { display: flex; align-items: center; gap: 8px; }
+  .dur-track { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .dur-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--purple), var(--teal)); }
+
+  /* PULSE ANIMATION */
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .loading { animation: pulse 1.2s ease-in-out infinite; }
+
+  /* RESPONSIVE */
+  @media(max-width:900px) {
+    .kpi-row { grid-template-columns: repeat(2,1fr); }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .container { padding: 20px 16px; }
+    header { padding: 0 16px; }
+    .tab-bar { padding: 0 16px; overflow-x: auto; }
+  }
+
+  /* SCROLLABLE CARD */
+  .card-scroll { max-height: 420px; overflow-y: auto; }
+  .card-scroll::-webkit-scrollbar { width: 5px; }
+  .card-scroll::-webkit-scrollbar-track { background: transparent; }
+  .card-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--surface2);
+    color: var(--text-muted);
+  }
+  .tag-organiser { background: #ede8f8; color: var(--purple); }
+
+  /* STATS MINI */
+  .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-key { font-size: 13px; color: var(--text-muted); }
+  .stat-val { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
+
+  /* MEMBER PROFILE */
+  .member-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* EXPORT */
+  .export-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* CHIP */
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--surface2); color: var(--text-muted);
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500;
+  }
+  .chip-teal { background: #e6faf8; color: #0d8c7f; }
+
+  /* INTRO CARD */
+  .intro-card {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    border-radius: 14px;
+    padding: 24px 28px;
+    color: #fff;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .intro-card::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: rgba(31,209,189,0.15);
+  }
+  .intro-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .intro-card p { font-size: 13px; opacity: 0.8; max-width: 500px; }
+
+  /* TIMELINE CHART */
+  .timeline-chart-wrap { margin-top: 24px; }
+  .tl-name-col { width: 150px; flex-shrink: 0; font-size: 12px; color: var(--text); text-align: right; padding-right: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tl-row { display: flex; align-items: center; margin-bottom: 3px; }
+  .tl-track { flex: 1; height: 18px; background: var(--surface2); border-radius: 4px; position: relative; }
+  .tl-bar { position: absolute; top: 0; height: 100%; border-radius: 4px; cursor: pointer; transition: filter 0.15s; }
+  .tl-bar:hover { filter: brightness(1.1); }
+  .tl-bar-full { background: linear-gradient(90deg, var(--purple), var(--teal)); }
+  .tl-bar-late { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+  .tl-axis { display: flex; margin-bottom: 8px; padding-left: 160px; }
+  .tl-axis-tick { flex: 1; font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .tl-divider { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(71,0,163,0.12); pointer-events: none; }
+  .tl-count-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--surface2); color: var(--text-muted); font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div id="tooltip" class="tooltip"></div>
+
+<header>
+  <div class="header-brand">
+    <div class="header-title">News Meeting Attendance</div>
+  </div>
+  <div class="header-badge" id="meeting-count-badge">0 Meetings Loaded</div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('overview')">Overview</div>
+  <div class="tab" onclick="switchTab('meeting')">Meeting Detail</div>
+  <div class="tab" onclick="switchTab('members')">Members</div>
+  <div class="tab" onclick="switchTab('heatmap')">Attendance Map</div>
+  <div class="tab" onclick="switchTab('upload')">Upload Data</div>
+</div>
+
+<!-- ====================== OVERVIEW PAGE ====================== -->
+<div class="page active" id="page-overview">
+  <div class="container">
+    <div class="intro-card">
+      <h2>Attendance Dashboard</h2>
+      <p>Upload your meeting spreadsheets using the Upload tab to populate this dashboard. Each tab in your spreadsheet becomes a separate meeting session.</p>
+    </div>
+    <div class="kpi-row" style="grid-template-columns:repeat(5,1fr)">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Meetings</div>
+        <div class="kpi-value" id="kpi-meetings">0</div>
+        <div class="kpi-sub">Sessions tracked</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Average Attendance</div>
+        <div class="kpi-value" id="kpi-avg-attend">—</div>
+        <div class="kpi-sub">Participants per meeting</div>
+      </div>
+      <div class="kpi-card kpi-teal">
+        <div class="kpi-label">Total Unique Members</div>
+        <div class="kpi-value" id="kpi-members">—</div>
+        <div class="kpi-sub">Across all meetings</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg. Time in Meeting</div>
+        <div class="kpi-value" id="kpi-avg-time">—</div>
+        <div class="kpi-sub">Average attendance duration</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Overall Attendance Rate</div>
+        <div class="kpi-value" id="kpi-attend-pct">—</div>
+        <div class="kpi-sub" id="kpi-attend-pct-sub">Across all meetings &amp; members</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Attendance Per Meeting</span>
+        </div>
+        <div class="card-body">
+          <div class="bar-chart" id="chart-per-meeting">
+            <div class="empty-state"><div class="icon">📊</div><p>No data yet</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Top 10 Most Engaged Members</span>
+          <span class="chip chip-teal">By meetings attended</span>
+        </div>
+        <div class="card-body">
+          <div class="bar-chart" id="chart-top-members">
+            <div class="empty-state"><div class="icon">👥</div><p>No data yet</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Meeting Summary</span>
+      </div>
+      <div class="card-scroll">
+        <table class="data-table" id="table-overview">
+          <thead>
+            <tr>
+              <th>Meeting Title</th>
+              <th>Date</th>
+              <th>Attendees</th>
+              <th>Duration</th>
+              <th>Avg. Time</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-overview">
+            <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No meetings loaded — upload data to get started</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====================== MEETING DETAIL PAGE ====================== -->
+<div class="page" id="page-meeting">
+  <div class="container">
+    <div class="controls-row">
+      <div class="select-wrap">
+        <select id="select-meeting" onchange="renderMeetingDetail()">
+          <option value="">Select a meeting…</option>
+        </select>
+      </div>
+      <input class="search-box" type="text" id="search-meeting" placeholder="Search attendees…" oninput="renderMeetingDetail()">
+    </div>
+
+    <div id="meeting-detail-content">
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <h3>Select a meeting above</h3>
+        <p>Upload data and choose a meeting to see detailed attendance information.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== MEMBERS PAGE ====================== -->
+<div class="page" id="page-members">
+  <div class="container">
+    <div class="controls-row">
+      <input class="search-box" type="text" id="search-members" placeholder="Search members…" oninput="renderMembersTable()" style="width:280px;">
+      <div class="select-wrap" style="max-width:220px;">
+        <select id="sort-members" onchange="renderMembersTable()">
+          <option value="meetings-desc">Most Meetings First</option>
+          <option value="meetings-asc">Fewest Meetings First</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="time-desc">Most Time First</option>
+        </select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All Members</span>
+        <span class="chip" id="member-count-chip">0 members</span>
+      </div>
+      <div class="card-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Meetings Attended</th>
+              <th>Attendance Rate</th>
+              <th>Total Time</th>
+              <th>Avg. Session Time</th>
+              <th>Last Seen</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-members">
+            <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No data yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== HEATMAP PAGE ====================== -->
+<div class="page" id="page-heatmap">
+  <div class="container">
+    <div class="controls-row">
+      <input class="search-box" type="text" id="search-heatmap" placeholder="Filter members…" oninput="renderHeatmap()">
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1FD1BD55;border:1.5px solid #1FD1BD"></div>Attended</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fff4e6;border:1.5px solid #ffd080"></div>Late (&lt;50% duration)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f0edf8;border:1.5px solid #e2dcf2"></div>Absent</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Attendance Map — All Members × All Meetings</span>
+      </div>
+      <div class="card-body" id="heatmap-container">
+        <div class="empty-state"><div class="icon">🗺️</div><h3>No data loaded</h3><p>Upload meeting files to see the attendance map.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== UPLOAD PAGE ====================== -->
+<div class="page" id="page-upload">
+  <div class="container">
+    <div class="card" style="max-width:600px;margin:0 auto;">
+      <div class="card-header">
+        <span class="card-title">Upload Meeting Data</span>
+      </div>
+      <div class="card-body">
+        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+          <input type="file" id="file-input" accept=".xlsx,.xls" multiple onchange="handleFiles(this.files)">
+          <div class="upload-icon">📁</div>
+          <h3>Drop your spreadsheet here</h3>
+          <p>Each tab in your .xlsx file will be imported as a separate meeting session.</p>
+          <button class="btn-upload">Browse Files</button>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-key">Expected format</span>
+          <span class="stat-val">Teams Meeting Export (.xlsx)</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Meetings loaded</span>
+          <span class="stat-val" id="upload-meeting-count">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-key">Total participants</span>
+          <span class="stat-val" id="upload-participant-count">0</span>
+        </div>
+        <div style="margin-top:20px;display:flex;gap:10px;">
+          <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">Upload Another File</button>
+          <button class="btn btn-secondary" onclick="clearAllData()">Clear All Data</button>
+        </div>
+
+        <div id="upload-log" style="margin-top:20px;font-size:12px;color:var(--text-muted);"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ===== STATE =====
+let meetings = []; // [{title, date, attendees, duration, avgTime, participants:[{name,email,role,joinTime,leaveTime,durationMins}]}]
+
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const idx = ['overview','meeting','members','heatmap','upload'].indexOf(tab);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('page-' + tab).classList.add('active');
+  if(tab==='heatmap') renderHeatmap();
+  if(tab==='members') renderMembersTable();
+  if(tab==='overview') renderOverview();
+}
+
+// ===== FILE HANDLING =====
+function handleDragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('dragover'); }
+function handleDragLeave(e) { document.getElementById('upload-zone').classList.remove('dragover'); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+}
+
+function handleFiles(files) {
+  Array.from(files).forEach(f => {
+    const reader = new FileReader();
+    reader.onload = e => parseXLSX(e.target.result, f.name);
+    reader.readAsArrayBuffer(f);
+  });
+}
+
+function parseXLSX(buffer, filename) {
+  try {
+    const wb = XLSX.read(buffer, {type:'array', cellDates:true});
+    let loaded = 0;
+    const log = [];
+    wb.SheetNames.forEach(sheetName => {
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], {header:1, defval:''});
+      const m = parseMeetingSheet(rows, sheetName);
+      if(m) {
+        // Deduplicate by title+date
+        const key = m.title + '|' + m.dateStr;
+        if(!meetings.find(x => x.key===key)) {
+          m.key = key;
+          meetings.push(m);
+          loaded++;
+          log.push(`✓ "${m.title}" — ${m.participants.length} attendees`);
+        } else {
+          log.push(`⚠ Skipped duplicate: "${m.title}"`);
+        }
+      }
+    });
+    meetings.sort((a,b) => new Date(a.date) - new Date(b.date));
+    updateAll();
+    document.getElementById('upload-log').innerHTML = log.join('<br>');
+  } catch(err) {
+    document.getElementById('upload-log').innerHTML = '❌ Error reading file: ' + err.message;
+  }
+}
+
+function parseMeetingSheet(rows, sheetName) {
+  let title='', dateStr='', attendedCount=0, durationStr='', avgTimeStr='';
+  let participantsStart=-1;
+
+  for(let i=0;i<Math.min(rows.length,15);i++) {
+    const r = rows[i];
+    const key = String(r[0]||'').toLowerCase().trim();
+    if(key==='meeting title') title = String(r[1]||'').trim();
+    if(key==='attended participants') attendedCount = parseInt(r[1])||0;
+    if(key==='start time') dateStr = String(r[1]||'').trim();
+    if(key==='meeting duration') durationStr = String(r[1]||'').trim();
+    if(key==='average attendance time') avgTimeStr = String(r[1]||'').trim();
+    if(key==='2. participants') participantsStart = i;
+  }
+  if(!title) title = sheetName;
+  if(participantsStart===-1) return null;
+
+  // Find header row (Name, First Join, etc.)
+  let headerRow = -1;
+  for(let i=participantsStart;i<Math.min(participantsStart+5, rows.length);i++) {
+    if(String(rows[i][0]||'').toLowerCase().trim()==='name') { headerRow=i; break; }
+  }
+  if(headerRow===-1) return null;
+
+  const headers = rows[headerRow].map(h=>String(h||'').toLowerCase().trim());
+  const nameIdx = headers.indexOf('name');
+  const joinIdx = headers.findIndex(h=>h.includes('first join')||h==='join time');
+  const leaveIdx = headers.findIndex(h=>h.includes('last leave')||h==='leave time');
+  const durIdx = headers.findIndex(h=>h.includes('in-meeting duration')||h==='duration');
+  const emailIdx = headers.indexOf('email');
+  const roleIdx = headers.indexOf('role');
+
+  const participants = [];
+  for(let i=headerRow+1;i<rows.length;i++) {
+    const r = rows[i];
+    const name = String(r[nameIdx]||'').trim();
+    if(!name || name.toLowerCase().includes('in-meeting activities') || name.toLowerCase().includes('3.')) break;
+    if(!name) continue;
+    const durStr = String(r[durIdx]||'').trim();
+    const dMins = parseDuration(durStr);
+    participants.push({
+      name: normalizeName(name),
+      email: String(r[emailIdx]||'').toLowerCase().trim(),
+      role: String(r[roleIdx]||'').trim(),
+      joinStr: String(r[joinIdx]||'').trim(),
+      leaveStr: String(r[leaveIdx]||'').trim(),
+      durStr, dMins
+    });
+  }
+
+  // Deduplicate participants (same email)
+  const seen = {};
+  const deduped = [];
+  participants.forEach(p => {
+    const key = p.email || p.name.toLowerCase();
+    if(!seen[key]) { seen[key]=true; deduped.push(p); }
+    else {
+      // Keep the one with longer duration
+      const existing = deduped.find(x=>(x.email||x.name.toLowerCase())===key);
+      if(existing && p.dMins > existing.dMins) { existing.dMins=p.dMins; existing.durStr=p.durStr; }
+    }
+  });
+
+  const date = parseDate(dateStr);
+  const meetingDurMins = parseDuration(durationStr);
+
+  return {
+    title, dateStr, date,
+    dateFormatted: date ? formatDate(date) : dateStr,
+    attendedCount: deduped.length,
+    durationStr, meetingDurMins,
+    avgTimeStr,
+    avgTimeMins: parseDuration(avgTimeStr),
+    participants: deduped
+  };
+}
+
+function normalizeName(name) {
+  // Clean up suffixes like "(News)", "- Contributor"
+  return name.replace(/\s*\(News\)\s*/i,'').replace(/\s*-\s*Contributor\s*/i,'').trim();
+}
+
+function parseDuration(s) {
+  if(!s) return 0;
+  s = String(s);
+  let total = 0;
+  const h = s.match(/(\d+)h/); if(h) total += parseInt(h[1])*60;
+  const m = s.match(/(\d+)m/); if(m) total += parseInt(m[1]);
+  const sec = s.match(/(\d+)s/); if(sec) total += parseInt(sec[1])/60;
+  return total;
+}
+
+function parseDate(s) {
+  if(!s) return null;
+  try { return new Date(s); } catch(e){ return null; }
+}
+
+function formatDate(d) {
+  if(!d||isNaN(d)) return '—';
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+}
+
+function fmtMins(m) {
+  if(!m||isNaN(m)) return '—';
+  const h=Math.floor(m/60), min=Math.round(m%60);
+  if(h>0) return `${h}h ${min}m`;
+  return `${min}m`;
+}
+
+function clearAllData() {
+  if(!confirm('Clear all loaded meeting data?')) return;
+  meetings=[];
+  updateAll();
+  document.getElementById('upload-log').innerHTML='';
+}
+
+// ===== UPDATE ALL VIEWS =====
+function updateAll() {
+  updateBadge();
+  populateMeetingSelects();
+  renderOverview();
+  renderMeetingDetail();
+  renderMembersTable();
+  document.getElementById('upload-meeting-count').textContent = meetings.length;
+  document.getElementById('upload-participant-count').textContent = getAllParticipants().length;
+}
+
+function updateBadge() {
+  document.getElementById('meeting-count-badge').textContent = meetings.length + ' Meeting' + (meetings.length!==1?'s':'') + ' Loaded';
+}
+
+function populateMeetingSelects() {
+  const sel = document.getElementById('select-meeting');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Select a meeting…</option>';
+  meetings.forEach((m,i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${m.dateFormatted} — ${m.title}`;
+    sel.appendChild(opt);
+  });
+  if(cur && meetings[parseInt(cur)]) sel.value=cur;
+  else if(meetings.length>0) sel.value='0';
+}
+
+// ===== GET ALL PARTICIPANTS (deduplicated across meetings) =====
+function getAllParticipants() {
+  const map = {};
+  meetings.forEach((m,mi) => {
+    m.participants.forEach(p => {
+      const key = p.email || p.name.toLowerCase();
+      if(!map[key]) map[key] = {name:p.name, email:p.email, meetings:[], totalMins:0};
+      map[key].meetings.push({meetingIdx:mi, dMins:p.dMins, durStr:p.durStr, role:p.role, date:m.date});
+      map[key].totalMins += p.dMins;
+    });
+  });
+  return Object.values(map);
+}
+
+// ===== OVERVIEW =====
+function renderOverview() {
+  if(meetings.length===0) {
+    document.getElementById('kpi-meetings').textContent='0';
+    document.getElementById('kpi-avg-attend').textContent='—';
+    document.getElementById('kpi-members').textContent='—';
+    document.getElementById('kpi-avg-time').textContent='—';
+    document.getElementById('kpi-attend-pct').textContent='—';
+    document.getElementById('kpi-attend-pct-sub').textContent='Across all meetings & members';
+    document.getElementById('chart-per-meeting').innerHTML='<div class="empty-state"><div class="icon">📊</div><p>No data yet</p></div>';
+    document.getElementById('chart-top-members').innerHTML='<div class="empty-state"><div class="icon">👥</div><p>No data yet</p></div>';
+    document.getElementById('tbody-overview').innerHTML='<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No meetings loaded — upload data to get started</td></tr>';
+    return;
+  }
+
+  const totalMeetings = meetings.length;
+  const avgAttend = meetings.reduce((s,m)=>s+m.attendedCount,0)/totalMeetings;
+  const members = getAllParticipants();
+  const avgTime = meetings.reduce((s,m)=>s+m.avgTimeMins,0)/totalMeetings;
+
+  // Overall attendance rate = total attendances / (unique members × total meetings)
+  const totalPossible = members.length * totalMeetings;
+  const totalActual = meetings.reduce((s,m)=>s+m.attendedCount,0);
+  const overallPct = totalPossible > 0 ? (totalActual / totalPossible * 100).toFixed(1) : 0;
+
+  document.getElementById('kpi-meetings').textContent = totalMeetings;
+  document.getElementById('kpi-avg-attend').textContent = Math.round(avgAttend);
+  document.getElementById('kpi-members').textContent = members.length;
+  document.getElementById('kpi-avg-time').textContent = fmtMins(avgTime);
+  document.getElementById('kpi-attend-pct').textContent = overallPct + '%';
+  document.getElementById('kpi-attend-pct-sub').textContent = `${totalActual} of ${totalPossible} possible slots`;
+
+  // Per meeting bar chart
+  const maxAttend = Math.max(...meetings.map(m=>m.attendedCount));
+  const allMemberCount = members.length;
+  document.getElementById('chart-per-meeting').innerHTML = meetings.map((m,i)=>{
+    const pct = allMemberCount>0 ? (m.attendedCount/allMemberCount*100).toFixed(0) : 0;
+    return `
+    <div class="bar-row">
+      <div class="bar-label" title="${m.title}">${m.title.length>22?m.title.slice(0,22)+'…':m.title}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${(m.attendedCount/maxAttend*100).toFixed(1)}%"></div>
+      </div>
+      <div class="bar-val" style="width:80px">${m.attendedCount} <span style="color:var(--text-muted);font-size:11px">(${pct}%)</span></div>
+    </div>`;
+  }).join('');
+
+  // Top members bar chart
+  const sorted = members.sort((a,b)=>b.meetings.length-a.meetings.length).slice(0,10);
+  const maxM = sorted[0]?.meetings.length||1;
+  document.getElementById('chart-top-members').innerHTML = sorted.map(m=>{
+    const pct = totalMeetings>0 ? (m.meetings.length/totalMeetings*100).toFixed(0) : 0;
+    return `
+    <div class="bar-row">
+      <div class="bar-label" title="${m.name}">${m.name.length>20?m.name.slice(0,20)+'…':m.name}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${(m.meetings.length/maxM*100).toFixed(1)}%"></div>
+      </div>
+      <div class="bar-val" style="width:90px">${m.meetings.length}/${totalMeetings} <span style="color:var(--text-muted);font-size:11px">(${pct}%)</span></div>
+    </div>`;
+  }).join('');
+
+  // Overview table
+  const totalUniqueMembers = members.length;
+  document.getElementById('tbody-overview').innerHTML = meetings.map((m,i)=>{
+    const pctOfMembers = totalUniqueMembers>0 ? (m.attendedCount/totalUniqueMembers*100).toFixed(0) : 0;
+    const avgPct = m.meetingDurMins>0 ? (m.avgTimeMins/m.meetingDurMins*100).toFixed(0) : 0;
+    return `
+    <tr style="cursor:pointer" onclick="goToMeeting(${i})">
+      <td><strong>${m.title}</strong></td>
+      <td>${m.dateFormatted}</td>
+      <td>
+        <span class="pill ${m.attendedCount>=50?'pill-green':m.attendedCount>=30?'pill-orange':'pill-red'}">
+          ${m.attendedCount}
+        </span>
+        <span style="font-size:11px;color:var(--text-muted);margin-left:5px">${pctOfMembers}% of group</span>
+      </td>
+      <td>${m.durationStr}</td>
+      <td>${m.avgTimeStr} <span style="font-size:11px;color:var(--text-muted)">(${avgPct}%)</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function goToMeeting(idx) {
+  document.getElementById('select-meeting').value = idx;
+  switchTab('meeting');
+  renderMeetingDetail();
+}
+
+// ===== ATTENDANCE LINE CHART =====
+function buildAttendanceLineChart(m) {
+  const startDate = m.date;
+  const totalMins = m.meetingDurMins || 33;
+
+  // Compute per-participant join/leave offsets in minutes from meeting start
+  const rows = m.participants.map(p => {
+    let joinOffset = 0, leaveOffset = p.dMins;
+    if(p.joinStr && startDate) {
+      const d = new Date(p.joinStr);
+      if(!isNaN(d)) joinOffset = Math.max(0, (d - startDate) / 60000);
+    }
+    if(p.leaveStr && startDate) {
+      const d = new Date(p.leaveStr);
+      if(!isNaN(d)) leaveOffset = Math.max(0, (d - startDate) / 60000);
+    } else {
+      leaveOffset = Math.min(p.dMins, totalMins);
+    }
+    return { name: p.name, joinOffset, leaveOffset, dMins: p.dMins };
+  });
+
+  // Sample every minute for a smooth line
+  const sampleInterval = 1;
+  const points = [];
+  for(let t = 0; t <= totalMins; t += sampleInterval) {
+    const count = rows.filter(r => r.joinOffset <= t && r.leaveOffset > t).length;
+    points.push({ t, count });
+  }
+  const maxCount = Math.max(...points.map(p => p.count), 1);
+
+  function fmtOffset(mins) {
+    if(!startDate || isNaN(startDate)) return `+${Math.floor(mins)}m`;
+    const d = new Date(startDate.getTime() + mins * 60000);
+    return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // SVG dimensions — wider padR to fit % labels on right
+  const W = 800, H = 200, padL = 44, padR = 52, padT = 16, padB = 36;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+
+  // Scale helpers
+  const xScale = t => padL + (t / totalMins) * chartW;
+  const yScale = c => padT + chartH - (c / maxCount) * chartH;
+
+  // Build smooth polyline points
+  const polyPts = points.map(p => `${xScale(p.t).toFixed(1)},${yScale(p.count).toFixed(1)}`).join(' ');
+
+  // Area path
+  const first = points[0], last = points[points.length - 1];
+  const areaPts = `${xScale(first.t).toFixed(1)},${(padT + chartH).toFixed(1)} ` +
+    points.map(p => `${xScale(p.t).toFixed(1)},${yScale(p.count).toFixed(1)}`).join(' ') +
+    ` ${xScale(last.t).toFixed(1)},${(padT + chartH).toFixed(1)}`;
+
+  // Y axis gridlines & labels — count on left, % on right
+  const ySteps = 5;
+  const yGridLines = Array.from({length: ySteps + 1}, (_, i) => {
+    const val = Math.round((i / ySteps) * maxCount);
+    const pct = Math.round((val / maxCount) * 100);
+    const y = yScale(val);
+    const rightX = (padL + chartW + 6).toFixed(1);
+    return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${(padL + chartW).toFixed(1)}" y2="${y.toFixed(1)}" stroke="#e2dcf2" stroke-width="1"/>
+            <text x="${(padL - 6).toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="10" fill="#7260a8" font-family="DM Mono,monospace">${val}</text>
+            <text x="${rightX}" y="${(y + 4).toFixed(1)}" text-anchor="start" font-size="10" fill="${pct===50?'#b35a00':pct===100?'#0d8c7f':'#7260a8'}" font-family="DM Mono,monospace" font-weight="${pct===50||pct===100?'700':'400'}">${pct}%</text>`;
+  }).join('');
+
+  // X axis ticks every 5 mins
+  const xTicks = [];
+  for(let t = 0; t <= totalMins; t += 5) {
+    const x = xScale(t);
+    const label = (t % 10 === 0 || t === 0 || t >= totalMins - 1) ? fmtOffset(t) : '';
+    xTicks.push(`<line x1="${x.toFixed(1)}" y1="${(padT + chartH).toFixed(1)}" x2="${x.toFixed(1)}" y2="${(padT + chartH + 5).toFixed(1)}" stroke="#e2dcf2" stroke-width="1"/>
+      ${label ? `<text x="${x.toFixed(1)}" y="${(padT + chartH + 16).toFixed(1)}" text-anchor="middle" font-size="10" fill="#7260a8" font-family="DM Sans,sans-serif">${label}</text>` : ''}`);
+  }
+
+  // Hover dots at each 5-min mark for tooltip interaction
+  const hoverDots = points.filter(p => p.t % 5 === 0).map(p => {
+    const x = xScale(p.t), y = yScale(p.count);
+    const pct = ((p.count / maxCount) * 100).toFixed(0);
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="white" stroke="#4700A3" stroke-width="2" opacity="0"
+      onmouseenter="this.setAttribute('opacity','1');showTip(event,'${fmtOffset(p.t)} — <strong>${p.count} people</strong> (${pct}%)')"
+      onmouseleave="this.setAttribute('opacity','0');hideTip()" style="cursor:crosshair"/>`;
+  }).join('');
+
+  // Early leaver chips
+  const earlyLeavers = rows
+    .filter(r => (r.dMins / totalMins) < 0.9)
+    .sort((a, b) => a.leaveOffset - b.leaveOffset);
+
+  const earlyHtml = earlyLeavers.length > 0 ? `
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+      <div class="section-label" style="margin-bottom:10px">Left Early</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${earlyLeavers.map(r => {
+          const shortName = r.name.split(',').map(x=>x.trim()).reverse().join(' ');
+          const pct = (r.dMins / totalMins * 100).toFixed(0);
+          const cls = pct >= 50 ? 'pill-orange' : 'pill-red';
+          return `<div style="display:flex;align-items:center;gap:6px;background:var(--surface2);border-radius:8px;padding:5px 10px;font-size:12px">
+            <span style="font-weight:500">${escHtml(shortName)}</span>
+            <span style="color:var(--text-muted)">left ${fmtOffset(r.leaveOffset)}</span>
+            <span class="pill ${cls}" style="padding:1px 6px;font-size:10px">${pct}%</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>` : `<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--teal-dark);font-weight:500">✓ All attendees stayed for 90%+ of this meeting</div>`;
+
+  return `<div class="card" style="margin-top:20px">
+    <div class="card-header">
+      <span class="card-title">Attendance Over Time</span>
+      <span class="chip">${rows.length} attendees · ${m.durationStr}</span>
+    </div>
+    <div class="card-body">
+      <svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;overflow:visible" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4700A3" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#1FD1BD" stop-opacity="0.04"/>
+          </linearGradient>
+        </defs>
+        ${yGridLines}
+        ${xTicks.join('')}
+        <polygon points="${areaPts}" fill="url(#areaGrad)"/>
+        <polyline points="${polyPts}" fill="none" stroke="#4700A3" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + chartH}" stroke="#e2dcf2" stroke-width="1"/>
+        ${hoverDots}
+      </svg>
+      ${earlyHtml}
+    </div>
+  </div>`;
+}
+
+// ===== MEETING DETAIL =====
+function renderMeetingDetail() {
+  const idx = parseInt(document.getElementById('select-meeting').value);
+  const container = document.getElementById('meeting-detail-content');
+  if(isNaN(idx)||!meetings[idx]) {
+    container.innerHTML='<div class="empty-state"><div class="icon">📋</div><h3>Select a meeting above</h3><p>Upload data and choose a meeting to see detailed attendance information.</p></div>';
+    return;
+  }
+  const m = meetings[idx];
+  const search = document.getElementById('search-meeting').value.toLowerCase();
+  let parts = m.participants;
+  if(search) parts = parts.filter(p=>p.name.toLowerCase().includes(search)||p.email.includes(search));
+
+  const avgMins = parts.reduce((s,p)=>s+p.dMins,0)/(parts.length||1);
+  const fullCount = parts.filter(p=>m.meetingDurMins>0 && p.dMins/m.meetingDurMins>=0.75).length;
+  const partCount = parts.filter(p=>m.meetingDurMins>0 && p.dMins/m.meetingDurMins>=0.5 && p.dMins/m.meetingDurMins<0.75).length;
+  const lateCount = parts.filter(p=>m.meetingDurMins>0 && p.dMins/m.meetingDurMins<0.5).length;
+
+  container.innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label">Attendees</div><div class="kpi-value">${parts.length}</div><div class="kpi-sub">of ${m.attendedCount} total</div></div>
+      <div class="kpi-card"><div class="kpi-label">Meeting Duration</div><div class="kpi-value" style="font-size:22px">${m.durationStr}</div><div class="kpi-sub">${m.dateFormatted}</div></div>
+      <div class="kpi-card kpi-teal"><div class="kpi-label">Avg. Time In Meeting</div><div class="kpi-value" style="font-size:22px">${m.avgTimeStr}</div><div class="kpi-sub">${((avgMins/(m.meetingDurMins||1))*100).toFixed(0)}% of meeting time</div></div>
+      <div class="kpi-card"><div class="kpi-label">Full Attendance (≥75%)</div><div class="kpi-value">${fullCount}</div><div class="kpi-sub">${partCount} partial · ${lateCount} brief</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" title="${m.title}">${m.title}</span>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#e6faf8;border:1px solid #1FD1BD"></div>≥75%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#fff4e6;border:1px solid #ffd080"></div>50–75%</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#fde8e8;border:1px solid #ffaaaa"></div>&lt;50%</div>
+        </div>
+      </div>
+      <div class="card-scroll">
+        <table class="data-table">
+          <thead><tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Duration</th>
+            <th>% of Meeting</th>
+            <th>Attendance</th>
+          </tr></thead>
+          <tbody>
+            ${parts.sort((a,b)=>b.dMins-a.dMins).map(p=>{
+              const pct = m.meetingDurMins>0 ? (p.dMins/m.meetingDurMins*100) : 0;
+              const cls = pct>=75?'pill-green':pct>=50?'pill-orange':'pill-red';
+              const label = pct>=75?'Full':pct>=50?'Partial':'Brief';
+              const initials = p.name.split(',').map(x=>x.trim()[0]||'').reverse().join('').slice(0,2).toUpperCase();
+              return `<tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div class="member-avatar">${initials}</div>
+                    <div>
+                      <div style="font-weight:500">${p.name}</div>
+                      <div style="font-size:11px;color:var(--text-muted)">${p.email}</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="tag ${p.role==='Organiser'?'tag-organiser':''}">${p.role}</span></td>
+                <td><span style="font-family:'DM Mono',monospace;font-size:12px">${p.durStr}</span></td>
+                <td>
+                  <div class="dur-bar">
+                    <div class="dur-track" style="width:80px"><div class="dur-fill" style="width:${Math.min(pct,100).toFixed(0)}%"></div></div>
+                    <span style="font-size:12px;font-family:'DM Mono',monospace">${pct.toFixed(0)}%</span>
+                  </div>
+                </td>
+                <td><span class="pill ${cls}">${label}</span></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    ${buildAttendanceLineChart(m)}`;
+}
+
+// ===== MEMBERS TABLE =====
+function renderMembersTable() {
+  const members = getAllParticipants();
+  const search = document.getElementById('search-members').value.toLowerCase();
+  const sort = document.getElementById('sort-members').value;
+  const totalMeetings = meetings.length;
+
+  let filtered = members.filter(m=>m.name.toLowerCase().includes(search)||m.email.includes(search));
+
+  if(sort==='meetings-desc') filtered.sort((a,b)=>b.meetings.length-a.meetings.length);
+  else if(sort==='meetings-asc') filtered.sort((a,b)=>a.meetings.length-b.meetings.length);
+  else if(sort==='name-asc') filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sort==='name-desc') filtered.sort((a,b)=>b.name.localeCompare(a.name));
+  else if(sort==='time-desc') filtered.sort((a,b)=>b.totalMins-a.totalMins);
+
+  document.getElementById('member-count-chip').textContent = filtered.length + ' members';
+
+  if(filtered.length===0) {
+    document.getElementById('tbody-members').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No members found</td></tr>';
+    return;
+  }
+
+  document.getElementById('tbody-members').innerHTML = filtered.map(m=>{
+    const rate = totalMeetings>0 ? (m.meetings.length/totalMeetings*100) : 0;
+    const avgMins = m.meetings.length>0 ? m.totalMins/m.meetings.length : 0;
+    const lastDate = m.meetings.map(x=>x.date).filter(Boolean).sort((a,b)=>b-a)[0];
+    const rateCls = rate>=80?'pill-green':rate>=50?'pill-orange':'pill-red';
+    const initials = m.name.split(',').map(x=>x.trim()[0]||'').reverse().join('').slice(0,2).toUpperCase();
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="member-avatar">${initials}</div>
+          <div>
+            <div style="font-weight:500">${m.name}</div>
+            <div style="font-size:11px;color:var(--text-muted)">${m.email}</div>
+          </div>
+        </div>
+      </td>
+      <td style="font-family:'DM Mono',monospace;font-weight:600">${m.meetings.length}<span style="color:var(--text-muted);font-weight:400"> / ${totalMeetings}</span></td>
+      <td>
+        <div class="dur-bar">
+          <div class="dur-track" style="width:70px"><div class="dur-fill" style="width:${rate.toFixed(0)}%"></div></div>
+          <span class="pill ${rateCls}" style="margin-left:4px">${rate.toFixed(0)}%</span>
+        </div>
+      </td>
+      <td style="font-family:'DM Mono',monospace">${fmtMins(m.totalMins)}</td>
+      <td style="font-family:'DM Mono',monospace">${fmtMins(avgMins)}</td>
+      <td style="font-size:12px;color:var(--text-muted)">${lastDate?formatDate(lastDate):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ===== HEATMAP =====
+function renderHeatmap() {
+  const container = document.getElementById('heatmap-container');
+  if(meetings.length===0) {
+    container.innerHTML='<div class="empty-state"><div class="icon">🗺️</div><h3>No data loaded</h3><p>Upload meeting files to see the attendance map.</p></div>';
+    return;
+  }
+
+  const search = document.getElementById('search-heatmap').value.toLowerCase();
+  const allMembers = getAllParticipants();
+  let members = allMembers.filter(m=>m.name.toLowerCase().includes(search)||m.email.includes(search));
+  members.sort((a,b)=>b.meetings.length-a.meetings.length);
+
+  // Build lookup: memberEmail -> meetingIdx -> dMins
+  const lookup = {};
+  meetings.forEach((m,mi)=>{
+    m.participants.forEach(p=>{
+      const key = p.email||p.name.toLowerCase();
+      if(!lookup[key]) lookup[key]={};
+      lookup[key][mi]=p.dMins;
+    });
+  });
+
+  const headerCols = meetings.map((m,i)=>`<div class="hm-col-label" title="${m.title}">${m.dateFormatted.split(' ').slice(0,2).join(' ')}</div>`).join('');
+
+  const rows = members.map(m=>{
+    const key = m.email || m.name.toLowerCase();
+    const cells = meetings.map((mtg,mi)=>{
+      const dMins = lookup[key]?.[mi];
+      if(dMins===undefined) {
+        return `<div class="hm-cell hm-cell-absent" 
+          onmouseenter="showTip(event,'${escHtml(m.name)}<br>Absent from:<br>${escHtml(mtg.title)}')"
+          onmouseleave="hideTip()">—</div>`;
+      }
+      const pct = mtg.meetingDurMins>0 ? dMins/mtg.meetingDurMins : 1;
+      const cls = pct>=0.5?'hm-cell-present':'hm-cell-late';
+      const label = pct>=0.5?'✓':'~';
+      return `<div class="hm-cell ${cls}"
+        onmouseenter="showTip(event,'${escHtml(m.name)}<br>${escHtml(mtg.title)}<br>Time: ${fmtMins(dMins)} (${(pct*100).toFixed(0)}%)')"
+        onmouseleave="hideTip()">${label}</div>`;
+    }).join('');
+    const initials = m.name.split(',').map(x=>x.trim()[0]||'').reverse().join('').slice(0,2).toUpperCase();
+    return `<div class="hm-row">
+      <div class="hm-name" title="${m.name}">${m.name}</div>
+      <div class="hm-cells">${cells}</div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="overflow-x:auto">
+      <div class="hm-header" style="padding-left:166px"><div style="display:flex;gap:4px">${headerCols}</div></div>
+      <div class="heatmap-grid">${rows}</div>
+    </div>`;
+}
+
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;'); }
+
+// ===== TOOLTIP =====
+const tooltip = document.getElementById('tooltip');
+function showTip(e, html) {
+  tooltip.innerHTML = html;
+  tooltip.classList.add('visible');
+  moveTip(e);
+}
+function moveTip(e) {
+  tooltip.style.left = (e.clientX+12)+'px';
+  tooltip.style.top = (e.clientY-10)+'px';
+}
+function hideTip() { tooltip.classList.remove('visible'); }
+document.addEventListener('mousemove', e=>{ if(tooltip.classList.contains('visible')) moveTip(e); });
+
+// ===== LOAD DEMO DATA ON STARTUP =====
+// Pre-seed with the provided data so the dashboard is useful immediately
+(function loadDemoData() {
+  const demoMeetings = [
+    {
+      title: "News Academy: End of season sport",
+      dateStr: "4/17/26, 11:59:14 AM",
+      durationStr: "33m 8s",
+      avgTimeStr: "26m 44s",
+      participants: [
+        {name:"Gartly, Joseph",email:"joseph.gartly@bauermedia.co.uk",role:"Organiser",durStr:"33m 5s",dMins:33.08,joinStr:"4/17/26, 11:59:16 AM",leaveStr:"4/17/26, 12:32:22 PM"},
+        {name:"Murie, Richard",email:"richard.murie@bauermedia.co.uk",role:"Presenter",durStr:"33m 5s",dMins:33.08,joinStr:"4/17/26, 11:59:16 AM",leaveStr:"4/17/26, 12:32:22 PM"},
+        {name:"Caston, Julie",email:"julie.caston@bauermedia.co.uk",role:"Presenter",durStr:"30m 1s",dMins:30.02,joinStr:"4/17/26, 11:59:48 AM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Maddren, Matt",email:"matt.maddren@bauermedia.co.uk",role:"Presenter",durStr:"30m 1s",dMins:30.02,joinStr:"4/17/26, 11:59:50 AM",leaveStr:"4/17/26, 12:29:52 PM"},
+        {name:"Burns, Shaunna",email:"shaunna.burns@bauermedia.co.uk",role:"Presenter",durStr:"29m 58s",dMins:29.97,joinStr:"4/17/26, 11:59:51 AM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Haile, Tom",email:"tom.haile@bauermedia.co.uk",role:"Presenter",durStr:"29m 58s",dMins:29.97,joinStr:"4/17/26, 11:59:51 AM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Lyons, Katie",email:"katie.lyons@bauermedia.co.uk",role:"Presenter",durStr:"13m 33s",dMins:13.55,joinStr:"4/17/26, 11:59:51 AM",leaveStr:"4/17/26, 12:13:24 PM"},
+        {name:"Squires, Sophie",email:"sophie.squires@bauermedia.co.uk",role:"Presenter",durStr:"29m 58s",dMins:29.97,joinStr:"4/17/26, 11:59:51 AM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Marsh, Andy",email:"andy.marsh@bauermedia.co.uk",role:"Presenter",durStr:"16m 8s",dMins:16.13,joinStr:"4/17/26, 11:59:52 AM",leaveStr:"4/17/26, 12:16:00 PM"},
+        {name:"Cable, Harrison",email:"harrison.cable@bauermedia.co.uk",role:"Presenter",durStr:"29m 44s",dMins:29.73,joinStr:"4/17/26, 11:59:54 AM",leaveStr:"4/17/26, 12:29:38 PM"},
+        {name:"Haines, Vicky",email:"vicky.haines@bauermedia.co.uk",role:"Presenter",durStr:"29m 50s",dMins:29.83,joinStr:"4/17/26, 11:59:54 AM",leaveStr:"4/17/26, 12:29:44 PM"},
+        {name:"Cahill, Becky",email:"beckycahill@bauermedia.co.uk",role:"Presenter",durStr:"29m 46s",dMins:29.77,joinStr:"4/17/26, 11:59:56 AM",leaveStr:"4/17/26, 12:29:43 PM"},
+        {name:"Arands, Owen",email:"owen.arands@bauermedia.co.uk",role:"Presenter",durStr:"29m 52s",dMins:29.87,joinStr:"4/17/26, 11:59:58 AM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Wright, Kat",email:"katwright@bauermedia.co.uk",role:"Presenter",durStr:"17m 37s",dMins:17.62,joinStr:"4/17/26, 12:00:01 PM",leaveStr:"4/17/26, 12:17:38 PM"},
+        {name:"Greenwood, Maria",email:"maria.greenwood@bauermedia.co.uk",role:"Presenter",durStr:"29m 43s",dMins:29.72,joinStr:"4/17/26, 12:00:02 PM",leaveStr:"4/17/26, 12:29:45 PM"},
+        {name:"Maddox, Kellie",email:"kellie.maddox@bauermedia.co.uk",role:"Presenter",durStr:"29m 47s",dMins:29.78,joinStr:"4/17/26, 12:00:02 PM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Marsh, Nathan",email:"nathan.marsh@bauermedia.co.uk",role:"Presenter",durStr:"29m 46s",dMins:29.77,joinStr:"4/17/26, 12:00:04 PM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Hunter-Warburton, Nichola",email:"nichola.hunterwarburton@bauermedia.co.uk",role:"Presenter",durStr:"29m 38s",dMins:29.63,joinStr:"4/17/26, 12:00:07 PM",leaveStr:"4/17/26, 12:29:45 PM"},
+        {name:"Mason, Daniel",email:"daniel.mason@bauermedia.co.uk",role:"Presenter",durStr:"29m 43s",dMins:29.72,joinStr:"4/17/26, 12:00:07 PM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Morgan, Oliver",email:"oliver.morgan@bauermedia.co.uk",role:"Presenter",durStr:"29m 45s",dMins:29.75,joinStr:"4/17/26, 12:00:08 PM",leaveStr:"4/17/26, 12:29:54 PM"},
+        {name:"Davies, Jecs",email:"jecs.davies@bauermedia.co.uk",role:"Presenter",durStr:"29m 39s",dMins:29.65,joinStr:"4/17/26, 12:00:09 PM",leaveStr:"4/17/26, 12:29:48 PM"},
+        {name:"Hudson, Isabella",email:"isabella.hudson@bauermedia.co.uk",role:"Presenter",durStr:"29m 41s",dMins:29.68,joinStr:"4/17/26, 12:00:09 PM",leaveStr:"4/17/26, 12:29:51 PM"},
+        {name:"White, Katy",email:"katy.white@bauermedia.co.uk",role:"Presenter",durStr:"29m 44s",dMins:29.73,joinStr:"4/17/26, 12:00:10 PM",leaveStr:"4/17/26, 12:29:54 PM"},
+        {name:"Liu, Karen",email:"karen.liu@bauermedia.co.uk",role:"Presenter",durStr:"29m 31s",dMins:29.52,joinStr:"4/17/26, 12:00:13 PM",leaveStr:"4/17/26, 12:29:45 PM"},
+        {name:"Hookings, Molly",email:"molly.hookings@bauermedia.co.uk",role:"Presenter",durStr:"29m 25s",dMins:29.42,joinStr:"4/17/26, 12:00:19 PM",leaveStr:"4/17/26, 12:29:45 PM"},
+        {name:"Norman, May",email:"may.norman@bauermedia.co.uk",role:"Presenter",durStr:"14m 43s",dMins:14.72,joinStr:"4/17/26, 12:00:24 PM",leaveStr:"4/17/26, 12:15:08 PM"},
+        {name:"Harris, William",email:"william.harris@bauermedia.co.uk",role:"Presenter",durStr:"29m 11s",dMins:29.18,joinStr:"4/17/26, 12:00:34 PM",leaveStr:"4/17/26, 12:29:46 PM"},
+        {name:"Symonds, George",email:"george.symonds@bauermedia.co.uk",role:"Presenter",durStr:"28m 31s",dMins:28.52,joinStr:"4/17/26, 12:00:35 PM",leaveStr:"4/17/26, 12:29:06 PM"},
+        {name:"McGillivray, Jessica",email:"jessica.mcgillivray@bauermedia.co.uk",role:"Presenter",durStr:"29m 4s",dMins:29.07,joinStr:"4/17/26, 12:00:48 PM",leaveStr:"4/17/26, 12:29:52 PM"},
+        {name:"O'Hare, Grace",email:"grace.ohare@bauermedia.co.uk",role:"Presenter",durStr:"26m 23s",dMins:26.38,joinStr:"4/17/26, 12:00:51 PM",leaveStr:"4/17/26, 12:27:14 PM"},
+        {name:"Guerra, Jamie",email:"jamie.guerra@bauermedia.co.uk",role:"Presenter",durStr:"28m 56s",dMins:28.93,joinStr:"4/17/26, 12:00:52 PM",leaveStr:"4/17/26, 12:29:48 PM"},
+        {name:"Kumar, Eleanor",email:"Eleanor.Kumar@bauermedia.co.uk",role:"Presenter",durStr:"28m 55s",dMins:28.92,joinStr:"4/17/26, 12:00:55 PM",leaveStr:"4/17/26, 12:29:51 PM"},
+        {name:"Bostock, Cara",email:"cara.bostock@bauermedia.co.uk",role:"Presenter",durStr:"12m 40s",dMins:12.67,joinStr:"4/17/26, 12:00:59 PM",leaveStr:"4/17/26, 12:13:40 PM"},
+        {name:"Burke, Jon",email:"jon.burke@bauermedia.co.uk",role:"Presenter",durStr:"28m 50s",dMins:28.83,joinStr:"4/17/26, 12:01:00 PM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Summerbell, Jo",email:"joanne.summerbell@bauermedia.co.uk",role:"Presenter",durStr:"28m 46s",dMins:28.77,joinStr:"4/17/26, 12:01:03 PM",leaveStr:"4/17/26, 12:29:49 PM"},
+        {name:"Livesey, Michelle",email:"michelle.livesey@bauermedia.co.uk",role:"Presenter",durStr:"31m 8s",dMins:31.13,joinStr:"4/17/26, 12:01:12 PM",leaveStr:"4/17/26, 12:32:21 PM"},
+        {name:"Wall, Frances",email:"frances.wall@bauermedia.co.uk",role:"Presenter",durStr:"28m 31s",dMins:28.52,joinStr:"4/17/26, 12:01:16 PM",leaveStr:"4/17/26, 12:29:47 PM"},
+        {name:"Harper, Aaron",email:"aaron.harper@bauermedia.co.uk",role:"Presenter",durStr:"24m 1s",dMins:24.02,joinStr:"4/17/26, 12:01:21 PM",leaveStr:"4/17/26, 12:25:23 PM"},
+        {name:"Ahearn, Katie",email:"katie.ahearn@bauermedia.co.uk",role:"Presenter",durStr:"28m 25s",dMins:28.42,joinStr:"4/17/26, 12:01:22 PM",leaveStr:"4/17/26, 12:29:48 PM"},
+        {name:"Andelin, Poppi",email:"poppi.andelin1@bauermedia.co.uk",role:"Presenter",durStr:"28m 30s",dMins:28.5,joinStr:"4/17/26, 12:01:23 PM",leaveStr:"4/17/26, 12:29:54 PM"},
+        {name:"Robson, Ellie",email:"ellie.robson@bauermedia.co.uk",role:"Presenter",durStr:"28m 18s",dMins:28.3,joinStr:"4/17/26, 12:01:36 PM",leaveStr:"4/17/26, 12:29:55 PM"},
+        {name:"Oak, Jasmine",email:"jasmine.oak@bauermedia.co.uk",role:"Presenter",durStr:"27m 47s",dMins:27.78,joinStr:"4/17/26, 12:01:59 PM",leaveStr:"4/17/26, 12:29:46 PM"},
+        {name:"Freeman, Jonny",email:"jonny.freeman@bauermedia.co.uk",role:"Presenter",durStr:"13m 30s",dMins:13.5,joinStr:"4/17/26, 12:02:08 PM",leaveStr:"4/17/26, 12:15:39 PM"},
+        {name:"Coutts, Lizzie",email:"lizzie.coutts1@bauermedia.co.uk",role:"Presenter",durStr:"26m 49s",dMins:26.82,joinStr:"4/17/26, 12:02:56 PM",leaveStr:"4/17/26, 12:29:45 PM"},
+        {name:"Bone, Ellen",email:"ellen.bone1@bauermedia.co.uk",role:"Presenter",durStr:"26m 50s",dMins:26.83,joinStr:"4/17/26, 12:03:01 PM",leaveStr:"4/17/26, 12:29:52 PM"},
+        {name:"Green, Cameron",email:"cameron.green@bauermedia.co.uk",role:"Presenter",durStr:"25m 40s",dMins:25.67,joinStr:"4/17/26, 12:04:09 PM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Arrowsmith, Liam",email:"liam.arrowsmith@bauermedia.co.uk",role:"Presenter",durStr:"25m 38s",dMins:25.63,joinStr:"4/17/26, 12:04:09 PM",leaveStr:"4/17/26, 12:29:48 PM"},
+        {name:"Dublin, Aaliyah",email:"aaliyah.dublin@bauermedia.co.uk",role:"Presenter",durStr:"23m 26s",dMins:23.43,joinStr:"4/17/26, 12:06:26 PM",leaveStr:"4/17/26, 12:29:52 PM"},
+        {name:"Green, Sophie",email:"sophie.green@bauermedia.co.uk",role:"Presenter",durStr:"22m 42s",dMins:22.7,joinStr:"4/17/26, 12:07:07 PM",leaveStr:"4/17/26, 12:29:50 PM"},
+        {name:"Richardson, Alex",email:"alex.richardson@bauermedia.co.uk",role:"Presenter",durStr:"10m 29s",dMins:10.48,joinStr:"4/17/26, 12:19:20 PM",leaveStr:"4/17/26, 12:29:50 PM"}
+      ]
+    },
+    {
+      title: "News Academy: Writing national stories for our audience",
+      dateStr: "4/24/26, 11:59:11 AM",
+      durationStr: "32m 15s",
+      avgTimeStr: "28m 15s",
+      participants: [
+        {name:"O'Sullivan, Aileen",email:"aileen.osullivan@bauermedia.co.uk",role:"Organiser",durStr:"31m 30s",dMins:31.5,joinStr:"4/24/26, 11:59:56 AM",leaveStr:"4/24/26, 12:31:26 PM"},
+        {name:"Livesey, Michelle",email:"michelle.livesey@bauermedia.co.uk",role:"Organiser",durStr:"31m 6s",dMins:31.1,joinStr:"4/24/26, 12:00:16 PM",leaveStr:"4/24/26, 12:31:23 PM"},
+        {name:"Richardson, Alex",email:"alex.richardson@bauermedia.co.uk",role:"Presenter",durStr:"32m 9s",dMins:32.15,joinStr:"4/24/26, 11:59:13 AM",leaveStr:"4/24/26, 12:31:22 PM"},
+        {name:"Dean, Greg",email:"greg.dean@bauermedia.co.uk",role:"Presenter",durStr:"31m 20s",dMins:31.33,joinStr:"4/24/26, 11:59:59 AM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Caston, Julie",email:"julie.caston@bauermedia.co.uk",role:"Presenter",durStr:"31m 16s",dMins:31.27,joinStr:"4/24/26, 12:00:04 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Maddox, Kellie",email:"kellie.maddox@bauermedia.co.uk",role:"Presenter",durStr:"29m 4s",dMins:29.07,joinStr:"4/24/26, 12:00:05 PM",leaveStr:"4/24/26, 12:29:09 PM"},
+        {name:"Burrow, Elliot",email:"elliot.burrow@bauermedia.co.uk",role:"Presenter",durStr:"29m 13s",dMins:29.22,joinStr:"4/24/26, 12:00:05 PM",leaveStr:"4/24/26, 12:29:18 PM"},
+        {name:"Maddren, Matt",email:"matt.maddren@bauermedia.co.uk",role:"Presenter",durStr:"31m 14s",dMins:31.23,joinStr:"4/24/26, 12:00:07 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Simpson, Abigail",email:"abigail.simpson@bauermedia.co.uk",role:"Presenter",durStr:"31m 13s",dMins:31.22,joinStr:"4/24/26, 12:00:07 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Fox, Andrea",email:"andrea.fox@bauermedia.co.uk",role:"Presenter",durStr:"31m 13s",dMins:31.22,joinStr:"4/24/26, 12:00:09 PM",leaveStr:"4/24/26, 12:31:22 PM"},
+        {name:"Foulger, Jim",email:"jim.foulger@bauermedia.co.uk",role:"Presenter",durStr:"31m 9s",dMins:31.15,joinStr:"4/24/26, 12:00:09 PM",leaveStr:"4/24/26, 12:31:19 PM"},
+        {name:"McGillivray, Jessica",email:"jessica.mcgillivray@bauermedia.co.uk",role:"Presenter",durStr:"28m 54s",dMins:28.9,joinStr:"4/24/26, 12:00:09 PM",leaveStr:"4/24/26, 12:29:04 PM"},
+        {name:"Roche, Sian",email:"sian.roche@bauermedia.co.uk",role:"Presenter",durStr:"31m 7s",dMins:31.12,joinStr:"4/24/26, 12:00:10 PM",leaveStr:"4/24/26, 12:31:17 PM"},
+        {name:"Marsh, Andy",email:"andy.marsh@bauermedia.co.uk",role:"Presenter",durStr:"26m 15s",dMins:26.25,joinStr:"4/24/26, 12:00:11 PM",leaveStr:"4/24/26, 12:26:27 PM"},
+        {name:"Antoniw, Natalia",email:"natalia.antoniw@bauermedia.co.uk",role:"Presenter",durStr:"31m 8s",dMins:31.13,joinStr:"4/24/26, 12:00:13 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Haile, Tom",email:"tom.haile@bauermedia.co.uk",role:"Presenter",durStr:"31m 7s",dMins:31.12,joinStr:"4/24/26, 12:00:15 PM",leaveStr:"4/24/26, 12:31:22 PM"},
+        {name:"Hudson, Isabella",email:"isabella.hudson@bauermedia.co.uk",role:"Presenter",durStr:"31m 6s",dMins:31.1,joinStr:"4/24/26, 12:00:15 PM",leaveStr:"4/24/26, 12:31:22 PM"},
+        {name:"Soanes, Matt",email:"matt.soanes@bauermedia.co.uk",role:"Presenter",durStr:"31m 4s",dMins:31.07,joinStr:"4/24/26, 12:00:16 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Wright, Kat",email:"katwright@bauermedia.co.uk",role:"Presenter",durStr:"31m 3s",dMins:31.05,joinStr:"4/24/26, 12:00:17 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"White, Katy",email:"katy.white@bauermedia.co.uk",role:"Presenter",durStr:"17m 18s",dMins:17.3,joinStr:"4/24/26, 12:00:22 PM",leaveStr:"4/24/26, 12:29:27 PM"},
+        {name:"Cummins, Q",email:"q.cummins@bauermedia.co.uk",role:"Presenter",durStr:"30m 57s",dMins:30.95,joinStr:"4/24/26, 12:00:24 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Symonds, George",email:"george.symonds@bauermedia.co.uk",role:"Presenter",durStr:"30m 46s",dMins:30.77,joinStr:"4/24/26, 12:00:29 PM",leaveStr:"4/24/26, 12:31:15 PM"},
+        {name:"Greenwood, Maria",email:"maria.greenwood@bauermedia.co.uk",role:"Presenter",durStr:"30m 49s",dMins:30.82,joinStr:"4/24/26, 12:00:31 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Marsh, Nathan",email:"nathan.marsh@bauermedia.co.uk",role:"Presenter",durStr:"30m 48s",dMins:30.8,joinStr:"4/24/26, 12:00:33 PM",leaveStr:"4/24/26, 12:31:22 PM"},
+        {name:"Green, Cameron",email:"cameron.green@bauermedia.co.uk",role:"Presenter",durStr:"30m 47s",dMins:30.78,joinStr:"4/24/26, 12:00:34 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Welch, Micky",email:"micky.welch@bauermedia.co.uk",role:"Presenter",durStr:"30m 44s",dMins:30.73,joinStr:"4/24/26, 12:00:34 PM",leaveStr:"4/24/26, 12:31:18 PM"},
+        {name:"Arrowsmith, Liam",email:"liam.arrowsmith@bauermedia.co.uk",role:"Presenter",durStr:"30m 44s",dMins:30.73,joinStr:"4/24/26, 12:00:35 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Liu, Karen",email:"karen.liu@bauermedia.co.uk",role:"Presenter",durStr:"30m 45s",dMins:30.75,joinStr:"4/24/26, 12:00:36 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Mason, Daniel",email:"daniel.mason@bauermedia.co.uk",role:"Presenter",durStr:"30m 44s",dMins:30.73,joinStr:"4/24/26, 12:00:37 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Andelin, Poppi",email:"poppi.andelin1@bauermedia.co.uk",role:"Presenter",durStr:"30m 44s",dMins:30.73,joinStr:"4/24/26, 12:00:37 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Arands, Owen",email:"owen.arands@bauermedia.co.uk",role:"Presenter",durStr:"30m 39s",dMins:30.65,joinStr:"4/24/26, 12:00:40 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Lomas, Rebecca",email:"rebecca.lomas@bauermedia.co.uk",role:"Presenter",durStr:"30m 36s",dMins:30.6,joinStr:"4/24/26, 12:00:45 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Clabon, Tom",email:"tom.clabon@bauermedia.co.uk",role:"Presenter",durStr:"30m 32s",dMins:30.53,joinStr:"4/24/26, 12:00:47 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Haines, Vicky",email:"vicky.haines@bauermedia.co.uk",role:"Presenter",durStr:"19m 47s",dMins:19.78,joinStr:"4/24/26, 12:00:48 PM",leaveStr:"4/24/26, 12:29:07 PM"},
+        {name:"O'Hare, Grace",email:"grace.ohare@bauermedia.co.uk",role:"Presenter",durStr:"30m 30s",dMins:30.5,joinStr:"4/24/26, 12:00:48 PM",leaveStr:"4/24/26, 12:31:19 PM"},
+        {name:"Norman, May",email:"may.norman@bauermedia.co.uk",role:"Presenter",durStr:"30m 31s",dMins:30.52,joinStr:"4/24/26, 12:00:50 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Ahearn, Katie",email:"katie.ahearn@bauermedia.co.uk",role:"Presenter",durStr:"28m 19s",dMins:28.32,joinStr:"4/24/26, 12:00:50 PM",leaveStr:"4/24/26, 12:29:10 PM"},
+        {name:"Maskery, Chris",email:"chris.maskery@bauermedia.co.uk",role:"Presenter",durStr:"30m 22s",dMins:30.37,joinStr:"4/24/26, 12:00:53 PM",leaveStr:"4/24/26, 12:31:16 PM"},
+        {name:"Mounsor, Olivia",email:"olivia.mounsor@bauermedia.co.uk",role:"Presenter",durStr:"23m 41s",dMins:23.68,joinStr:"4/24/26, 12:00:56 PM",leaveStr:"4/24/26, 12:24:38 PM"},
+        {name:"Wall, Frances",email:"frances.wall@bauermedia.co.uk",role:"Presenter",durStr:"30m 20s",dMins:30.33,joinStr:"4/24/26, 12:00:56 PM",leaveStr:"4/24/26, 12:31:17 PM"},
+        {name:"Payne, Jess",email:"jess.payne@bauermedia.co.uk",role:"Presenter",durStr:"28m 41s",dMins:28.68,joinStr:"4/24/26, 12:00:57 PM",leaveStr:"4/24/26, 12:29:39 PM"},
+        {name:"Kumar, Eleanor",email:"Eleanor.Kumar@bauermedia.co.uk",role:"Presenter",durStr:"30m 19s",dMins:30.32,joinStr:"4/24/26, 12:01:01 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Lane Kieltyka, Alex",email:"alex.lanekieltyka@bauermedia.co.uk",role:"Presenter",durStr:"30m 9s",dMins:30.15,joinStr:"4/24/26, 12:01:08 PM",leaveStr:"4/24/26, 12:31:18 PM"},
+        {name:"Coutts, Lizzie",email:"lizzie.coutts1@bauermedia.co.uk",role:"Presenter",durStr:"30m 11s",dMins:30.18,joinStr:"4/24/26, 12:01:08 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Linnecar, Charlotte",email:"charlotte.linnecar@bauermedia.co.uk",role:"Presenter",durStr:"30m 10s",dMins:30.17,joinStr:"4/24/26, 12:01:10 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Davis-Smith, Chris",email:"chris.davis-smith@bauermedia.co.uk",role:"Presenter",durStr:"30m 5s",dMins:30.08,joinStr:"4/24/26, 12:01:14 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Barber, Charlotte",email:"charlotte.barber@bauermedia.co.uk",role:"Presenter",durStr:"29m 53s",dMins:29.88,joinStr:"4/24/26, 12:01:25 PM",leaveStr:"4/24/26, 12:31:18 PM"},
+        {name:"Davies, Anna",email:"anna.davies2@bauermedia.co.uk",role:"Presenter",durStr:"28m 59s",dMins:28.98,joinStr:"4/24/26, 12:02:18 PM",leaveStr:"4/24/26, 12:31:17 PM"},
+        {name:"Easton, Louise",email:"louise.easton@bauermedia.co.uk",role:"Presenter",durStr:"28m 53s",dMins:28.88,joinStr:"4/24/26, 12:02:27 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Tomkinson, Stan",email:"stan.tomkinson@bauermedia.co.uk",role:"Presenter",durStr:"28m 43s",dMins:28.72,joinStr:"4/24/26, 12:02:34 PM",leaveStr:"4/24/26, 12:31:18 PM"},
+        {name:"Harper, Aaron",email:"aaron.harper@bauermedia.co.uk",role:"Presenter",durStr:"21m 16s",dMins:21.27,joinStr:"4/24/26, 12:02:58 PM",leaveStr:"4/24/26, 12:24:15 PM"},
+        {name:"Burns, Shaunna",email:"shaunna.burns@bauermedia.co.uk",role:"Presenter",durStr:"24m 18s",dMins:24.3,joinStr:"4/24/26, 12:03:04 PM",leaveStr:"4/24/26, 12:27:23 PM"},
+        {name:"Morgan, Oliver",email:"oliver.morgan@bauermedia.co.uk",role:"Presenter",durStr:"27m 59s",dMins:27.98,joinStr:"4/24/26, 12:03:21 PM",leaveStr:"4/24/26, 12:31:21 PM"},
+        {name:"Christian, Leo",email:"leo.christian@bauermedia.co.uk",role:"Presenter",durStr:"18m 58s",dMins:18.97,joinStr:"4/24/26, 12:03:41 PM",leaveStr:"4/24/26, 12:22:40 PM"},
+        {name:"Squires, Sophie",email:"sophie.squires@bauermedia.co.uk",role:"Presenter",durStr:"22m 32s",dMins:22.53,joinStr:"4/24/26, 12:04:44 PM",leaveStr:"4/24/26, 12:27:17 PM"},
+        {name:"Lyons, Katie",email:"katie.lyons@bauermedia.co.uk",role:"Presenter",durStr:"26m 39s",dMins:26.65,joinStr:"4/24/26, 12:04:46 PM",leaveStr:"4/24/26, 12:31:25 PM"},
+        {name:"Corns, Alex",email:"alex.corns@bauermedia.co.uk",role:"Presenter",durStr:"26m 5s",dMins:26.08,joinStr:"4/24/26, 12:05:15 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Dublin, Aaliyah",email:"aaliyah.dublin@bauermedia.co.uk",role:"Presenter",durStr:"9m 45s",dMins:9.75,joinStr:"4/24/26, 12:05:21 PM",leaveStr:"4/24/26, 12:15:06 PM"},
+        {name:"Chesher, Abbie",email:"abbie.chesher@bauermedia.co.uk",role:"Presenter",durStr:"23m 39s",dMins:23.65,joinStr:"4/24/26, 12:07:38 PM",leaveStr:"4/24/26, 12:31:18 PM"},
+        {name:"Hookings, Molly",email:"molly.hookings@bauermedia.co.uk",role:"Presenter",durStr:"23m 2s",dMins:23.03,joinStr:"4/24/26, 12:08:18 PM",leaveStr:"4/24/26, 12:31:20 PM"},
+        {name:"Smith, Adam",email:"adam.smith@bauermedia.co.uk",role:"Presenter",durStr:"10m 26s",dMins:10.43,joinStr:"4/24/26, 12:20:51 PM",leaveStr:"4/24/26, 12:31:17 PM"}
+      ]
+    }
+  ];
+
+  demoMeetings.forEach(dm => {
+    const date = parseDate(dm.dateStr);
+    const m = {
+      title: dm.title,
+      dateStr: dm.dateStr,
+      date, dateFormatted: formatDate(date),
+      attendedCount: dm.participants.length,
+      durationStr: dm.durationStr,
+      meetingDurMins: parseDuration(dm.durationStr),
+      avgTimeStr: dm.avgTimeStr,
+      avgTimeMins: parseDuration(dm.avgTimeStr),
+      participants: dm.participants,
+      key: dm.title + '|' + dm.dateStr
+    };
+    meetings.push(m);
+  });
+  meetings.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  updateAll();
+})();
+</script>
+</body>
+</html>
